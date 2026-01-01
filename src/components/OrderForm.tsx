@@ -6,17 +6,87 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Send, MapPin, Truck, Calendar } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Send, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 const cakeTypes = [
   "Buttercream Cake",
   "Chocolate Cake",
-  "Red Velvet Cake",
+  "Red Velvet",
   "Carrot Cake",
   "Cupcakes",
-  "Custom Design",
+  "Not sure — I need guidance",
+];
+
+const occasions = [
+  "Birthday",
+  "Wedding",
+  "Corporate Event",
+  "Baby Shower / Gender Reveal",
+  "Anniversary",
+  "Other",
+];
+
+const servingSizes = [
+  "10–20 guests",
+  "20–50 guests",
+  "50–100 guests",
+  "100+ guests",
+];
+
+const timeframes = [
+  "Within 5 days (rush order)",
+  "1–2 weeks",
+  "3–4 weeks",
+  "More than a month away",
+];
+
+const budgetRanges = [
+  "Under R500",
+  "R500 – R1,000",
+  "R1,000 – R2,500",
+  "R2,500 – R5,000",
+  "R5,000+ (premium/wedding cakes)",
+];
+
+const deliveryOptions = [
+  "Yes — please include delivery",
+  "No — I'll pick up from Vaal",
+];
+
+const confirmationQuestions = [
+  {
+    id: "deposit",
+    question: "Do you understand that custom cakes require a 50% non-refundable deposit to secure your order?",
+    options: ["Yes, I understand", "No"],
+  },
+  {
+    id: "rushFees",
+    question: "Do you understand that orders requested within 5 days of the event will incur rush fees?",
+    options: ["Yes, I understand", "No"],
+  },
+  {
+    id: "pricingBasis",
+    question: "Are you aware that cake designs are quoted based on complexity, size, and detail — not just flavour?",
+    options: ["Yes, I understand", "No"],
+  },
+  {
+    id: "designVariation",
+    question: "Do you agree that final cake designs may vary slightly from reference images due to the handcrafted nature of artisan cakes?",
+    options: ["Yes, I understand", "No"],
+  },
+  {
+    id: "deliveryFees",
+    question: "Are you prepared to pay delivery fees separately, based on your location distance from Vaal?",
+    options: ["Yes, I understand", "No, I'll arrange pickup instead"],
+  },
+  {
+    id: "cancellation",
+    question: "Do you understand that cancellations made less than 7 days before the event are non-refundable?",
+    options: ["Yes, I understand", "No"],
+  },
 ];
 
 export function OrderForm() {
@@ -24,7 +94,15 @@ export function OrderForm() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [deliveryOption, setDeliveryOption] = useState<string>("");
+  const [confirmations, setConfirmations] = useState<Record<string, string>>({});
+
+  const needsDelivery = deliveryOption === "Yes — please include delivery";
+
+  const handleConfirmationChange = (questionId: string, value: string) => {
+    setConfirmations((prev) => ({ ...prev, [questionId]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,15 +110,23 @@ export function OrderForm() {
 
     const formData = new FormData(e.currentTarget);
     
+    // Build confirmation notes
+    const confirmationNotes = confirmationQuestions
+      .map((q) => `${q.id}: ${confirmations[q.id] || "Not answered"}`)
+      .join("; ");
+    
+    const additionalNotes = formData.get("notes") as string;
+    const combinedNotes = `Budget: ${formData.get("budget")}\nServing Size: ${formData.get("servingSize")}\nTimeframe: ${formData.get("timeframe")}\n\nConfirmations: ${confirmationNotes}\n\n${additionalNotes || ""}`;
+
     const inquiryData = {
       name: formData.get("name") as string,
       contact: formData.get("contact") as string,
       cake_type: formData.get("cakeType") as string,
-      event_type: (formData.get("eventType") as string) || null,
-      delivery_option: formData.get("delivery") as string,
-      delivery_location: (formData.get("location") as string) || null,
-      date_needed: formData.get("date") as string,
-      additional_notes: (formData.get("notes") as string) || null,
+      event_type: formData.get("occasion") as string,
+      delivery_option: needsDelivery ? "delivery" : "pickup",
+      delivery_location: needsDelivery ? (formData.get("deliveryLocation") as string) : null,
+      date_needed: new Date().toISOString().split('T')[0], // Default to today, actual date is in timeframe
+      additional_notes: combinedNotes,
     };
 
     const { error } = await supabase
@@ -50,265 +136,334 @@ export function OrderForm() {
     if (error) {
       toast({
         title: "Error",
-        description: "Something went wrong. Please try again or WhatsApp us directly.",
+        description: "Something went wrong. Please try again or call us directly.",
         variant: "destructive",
       });
     } else {
+      setIsSubmitted(true);
       toast({
         title: "Inquiry Submitted!",
-        description: "Thank you for your order inquiry. Melody will get back to you within 24 hours.",
+        description: "Thank you! We'll send you a quotation within 24 hours.",
       });
-      (e.target as HTMLFormElement).reset();
-      setDeliveryOption("");
     }
 
     setIsSubmitting(false);
   };
 
+  if (isSubmitted) {
+    return (
+      <section id="order" className="py-20 md:py-32 bg-gold-gradient" ref={ref}>
+        <div className="container max-w-2xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="bg-card rounded-3xl p-12 shadow-elegant"
+          >
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-secondary/10 flex items-center justify-center">
+              <CheckCircle2 className="w-10 h-10 text-secondary" />
+            </div>
+            <h2 className="font-display text-3xl font-bold text-foreground mb-4">
+              Thank You!
+            </h2>
+            <p className="font-body text-lg text-foreground/70 mb-6">
+              Your inquiry has been submitted successfully. We'll review your request and send you a quotation within 24 hours.
+            </p>
+            <Button
+              variant="hero"
+              onClick={() => {
+                setIsSubmitted(false);
+                setConfirmations({});
+                setDeliveryOption("");
+              }}
+            >
+              Submit Another Inquiry
+            </Button>
+          </motion.div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="order" className="py-20 md:py-32 bg-gold-gradient" ref={ref}>
-      <div className="container">
+      <div className="container max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
-          <span className="inline-block px-4 py-2 mb-6 text-sm font-medium text-secondary bg-secondary/10 rounded-full font-body">
-            Place Your Order
-          </span>
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Custom Order <span className="text-primary">Inquiry</span>
+            Request a Custom Cake
           </h2>
-          <p className="font-body text-lg text-foreground/70 max-w-2xl mx-auto">
-            Ready to create something special? Fill out the form below and we'll get back to you 
-            within 24 hours to discuss your dream cake.
+          <p className="font-body text-lg text-foreground/70 max-w-xl mx-auto">
+            Fill in the details below and we'll send you a quotation.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-5 gap-12 max-w-6xl mx-auto">
-          {/* Form */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="lg:col-span-3"
-          >
-            <form onSubmit={handleSubmit} className="bg-card rounded-3xl p-8 shadow-elegant">
-              <div className="grid sm:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="font-body font-medium text-foreground">
-                    Full Name *
-                  </Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    required
-                    placeholder="Your name"
-                    className="h-12 font-body"
-                  />
-                </div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <form onSubmit={handleSubmit} className="bg-card rounded-3xl p-8 md:p-10 shadow-elegant space-y-10">
+            
+            {/* Section 1: Order Details */}
+            <div className="space-y-6">
+              <h3 className="font-display text-xl font-semibold text-foreground border-b border-border pb-3">
+                Order Details
+              </h3>
 
-                <div className="space-y-2">
-                  <Label htmlFor="contact" className="font-body font-medium text-foreground">
-                    Phone / WhatsApp *
-                  </Label>
-                  <Input
-                    id="contact"
-                    name="contact"
-                    type="tel"
-                    required
-                    placeholder="Your contact number"
-                    className="h-12 font-body"
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="cakeType" className="font-body font-medium text-foreground">
+                  What type of cake are you looking for? *
+                </Label>
+                <Select name="cakeType" required>
+                  <SelectTrigger className="h-12 font-body">
+                    <SelectValue placeholder="Select cake type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {cakeTypes.map((type) => (
+                      <SelectItem key={type} value={type} className="font-body">
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-6 mt-6">
-                <div className="space-y-2">
-                  <Label htmlFor="cakeType" className="font-body font-medium text-foreground">
-                    Cake Type *
-                  </Label>
-                  <Select name="cakeType" required>
-                    <SelectTrigger className="h-12 font-body">
-                      <SelectValue placeholder="Select cake type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {cakeTypes.map((type) => (
-                        <SelectItem key={type} value={type} className="font-body">
-                          {type}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="eventType" className="font-body font-medium text-foreground">
-                    Event / Function
-                  </Label>
-                  <Input
-                    id="eventType"
-                    name="eventType"
-                    placeholder="e.g., Wedding, Birthday"
-                    className="h-12 font-body"
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="occasion" className="font-body font-medium text-foreground">
+                  What is the occasion? *
+                </Label>
+                <Select name="occasion" required>
+                  <SelectTrigger className="h-12 font-body">
+                    <SelectValue placeholder="Select occasion" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {occasions.map((occasion) => (
+                      <SelectItem key={occasion} value={occasion} className="font-body">
+                        {occasion}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-6 mt-6">
-                <div className="space-y-2">
-                  <Label htmlFor="delivery" className="font-body font-medium text-foreground">
-                    Delivery or Pickup *
+              <div className="space-y-2">
+                <Label htmlFor="servingSize" className="font-body font-medium text-foreground">
+                  How many people should the cake serve? *
+                </Label>
+                <Select name="servingSize" required>
+                  <SelectTrigger className="h-12 font-body">
+                    <SelectValue placeholder="Select serving size" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {servingSizes.map((size) => (
+                      <SelectItem key={size} value={size} className="font-body">
+                        {size}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="timeframe" className="font-body font-medium text-foreground">
+                  When do you need the cake? *
+                </Label>
+                <Select name="timeframe" required>
+                  <SelectTrigger className="h-12 font-body">
+                    <SelectValue placeholder="Select timeframe" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {timeframes.map((timeframe) => (
+                      <SelectItem key={timeframe} value={timeframe} className="font-body">
+                        {timeframe}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="budget" className="font-body font-medium text-foreground">
+                  What is your budget range? *
+                </Label>
+                <Select name="budget" required>
+                  <SelectTrigger className="h-12 font-body">
+                    <SelectValue placeholder="Select budget range" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {budgetRanges.map((budget) => (
+                      <SelectItem key={budget} value={budget} className="font-body">
+                        {budget}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="delivery" className="font-body font-medium text-foreground">
+                  Will you need delivery? *
+                </Label>
+                <Select 
+                  name="delivery" 
+                  required 
+                  value={deliveryOption}
+                  onValueChange={setDeliveryOption}
+                >
+                  <SelectTrigger className="h-12 font-body">
+                    <SelectValue placeholder="Select delivery option" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {deliveryOptions.map((option) => (
+                      <SelectItem key={option} value={option} className="font-body">
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Section 2: Confirmation Questions */}
+            <div className="space-y-6">
+              <h3 className="font-display text-xl font-semibold text-foreground border-b border-border pb-3">
+                Please Confirm the Following
+              </h3>
+
+              {confirmationQuestions.map((q) => (
+                <div key={q.id} className="space-y-3 p-4 bg-muted/20 rounded-xl">
+                  <Label className="font-body font-medium text-foreground leading-relaxed block">
+                    {q.question} *
                   </Label>
-                  <Select 
-                    name="delivery" 
-                    required 
-                    value={deliveryOption}
-                    onValueChange={setDeliveryOption}
+                  <RadioGroup
+                    required
+                    value={confirmations[q.id] || ""}
+                    onValueChange={(value) => handleConfirmationChange(q.id, value)}
+                    className="flex flex-col sm:flex-row gap-4"
                   >
-                    <SelectTrigger className="h-12 font-body">
-                      <SelectValue placeholder="Select option" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pickup" className="font-body">Pickup from Vaal</SelectItem>
-                      <SelectItem value="delivery" className="font-body">Delivery (additional cost)</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    {q.options.map((option) => (
+                      <div key={option} className="flex items-center space-x-2">
+                        <RadioGroupItem 
+                          value={option} 
+                          id={`${q.id}-${option}`}
+                          className="border-primary text-primary"
+                        />
+                        <Label 
+                          htmlFor={`${q.id}-${option}`} 
+                          className="font-body text-foreground/80 cursor-pointer"
+                        >
+                          {option}
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
                 </div>
+              ))}
+            </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="date" className="font-body font-medium text-foreground">
-                    Date Needed *
-                  </Label>
-                  <Input
-                    id="date"
-                    name="date"
-                    type="date"
-                    required
-                    className="h-12 font-body"
-                  />
-                </div>
+            {/* Section 3: Contact Details */}
+            <div className="space-y-6">
+              <div>
+                <h3 className="font-display text-xl font-semibold text-foreground border-b border-border pb-3">
+                  Contact Details
+                </h3>
+                <p className="font-body text-foreground/60 mt-2">
+                  Great! Please provide your contact details and we'll send you a quotation.
+                </p>
               </div>
 
-              {deliveryOption === "delivery" && (
-                <div className="space-y-2 mt-6">
-                  <Label htmlFor="location" className="font-body font-medium text-foreground">
+              <div className="space-y-2">
+                <Label htmlFor="name" className="font-body font-medium text-foreground">
+                  Your Full Name *
+                </Label>
+                <Input
+                  id="name"
+                  name="name"
+                  required
+                  placeholder="Enter your full name"
+                  className="h-12 font-body"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="contact" className="font-body font-medium text-foreground">
+                  Phone Number / WhatsApp *
+                </Label>
+                <Input
+                  id="contact"
+                  name="contact"
+                  type="tel"
+                  required
+                  placeholder="Enter your phone number"
+                  className="h-12 font-body"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email" className="font-body font-medium text-foreground">
+                  Email Address *
+                </Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  placeholder="Enter your email address"
+                  className="h-12 font-body"
+                />
+              </div>
+
+              {needsDelivery && (
+                <div className="space-y-2">
+                  <Label htmlFor="deliveryLocation" className="font-body font-medium text-foreground">
                     Delivery Location *
                   </Label>
                   <Input
-                    id="location"
-                    name="location"
-                    placeholder="Your delivery address"
+                    id="deliveryLocation"
+                    name="deliveryLocation"
+                    required={needsDelivery}
+                    placeholder="Enter your delivery address"
                     className="h-12 font-body"
-                    required={deliveryOption === "delivery"}
                   />
                 </div>
               )}
 
-              <div className="space-y-2 mt-6">
+              <div className="space-y-2">
                 <Label htmlFor="notes" className="font-body font-medium text-foreground">
-                  Additional Notes
+                  Any additional details or design inspiration?
                 </Label>
                 <Textarea
                   id="notes"
                   name="notes"
-                  placeholder="Tell us about your vision, design preferences, serving size, etc."
+                  placeholder="Tell us about your vision, share links to reference images, colors, themes, etc."
                   className="min-h-[120px] font-body"
                 />
               </div>
-
-              <Button
-                type="submit"
-                variant="hero"
-                size="lg"
-                className="w-full mt-8"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  "Submitting..."
-                ) : (
-                  <>
-                    Submit Inquiry
-                    <Send className="w-4 h-4" />
-                  </>
-                )}
-              </Button>
-            </form>
-          </motion.div>
-
-          {/* Info Cards */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="lg:col-span-2 space-y-6"
-          >
-            <div className="bg-card rounded-2xl p-6 shadow-card">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-6 h-6 text-secondary" />
-                </div>
-                <div>
-                  <h3 className="font-display text-lg font-semibold text-foreground mb-2">
-                    Pickup Location
-                  </h3>
-                  <p className="font-body text-foreground/70">
-                    Vaal, Johannesburg, South Africa
-                  </p>
-                </div>
-              </div>
             </div>
 
-            <div className="bg-card rounded-2xl p-6 shadow-card">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Truck className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-display text-lg font-semibold text-foreground mb-2">
-                    Delivery Info
-                  </h3>
-                  <p className="font-body text-foreground/70">
-                    Delivery available at additional cost. Pricing depends on distance and cake size.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-card rounded-2xl p-6 shadow-card">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-muted/50 flex items-center justify-center flex-shrink-0">
-                  <Calendar className="w-6 h-6 text-muted-foreground" />
-                </div>
-                <div>
-                  <h3 className="font-display text-lg font-semibold text-foreground mb-2">
-                    Order Lead Time
-                  </h3>
-                  <p className="font-body text-foreground/70">
-                    Please place orders at least 3-5 days in advance. Custom designs may require more time.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-primary rounded-2xl p-6">
-              <h3 className="font-display text-lg font-semibold text-primary-foreground mb-2">
-                Need it faster?
-              </h3>
-              <p className="font-body text-primary-foreground/80 mb-4">
-                WhatsApp us directly for urgent orders or quick questions.
-              </p>
-              <Button 
-                variant="whatsapp" 
-                size="default"
-                onClick={() => window.open("https://wa.me/27000000000", "_blank")}
-              >
-                Chat on WhatsApp
-              </Button>
-            </div>
-          </motion.div>
-        </div>
+            <Button
+              type="submit"
+              variant="hero"
+              size="lg"
+              className="w-full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                "Submitting..."
+              ) : (
+                <>
+                  Submit Inquiry
+                  <Send className="w-4 h-4" />
+                </>
+              )}
+            </Button>
+          </form>
+        </motion.div>
       </div>
     </section>
   );

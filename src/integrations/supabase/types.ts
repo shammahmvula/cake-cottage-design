@@ -14,7 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      order_inquiries: {
+        Row: {
+          additional_notes: string | null
+          cake_type: string
+          contact: string
+          created_at: string
+          date_needed: string
+          delivery_location: string | null
+          delivery_option: string
+          event_type: string | null
+          id: string
+          name: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          additional_notes?: string | null
+          cake_type: string
+          contact: string
+          created_at?: string
+          date_needed: string
+          delivery_location?: string | null
+          delivery_option?: string
+          event_type?: string | null
+          id?: string
+          name: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          additional_notes?: string | null
+          cake_type?: string
+          contact?: string
+          created_at?: string
+          date_needed?: string
+          delivery_location?: string | null
+          delivery_option?: string
+          event_type?: string | null
+          id?: string
+          name?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

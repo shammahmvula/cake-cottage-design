@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Phone } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Menu, X, Phone, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navLinks = [
   { name: "Home", href: "#home" },
   { name: "About", href: "#about" },
   { name: "Cakes", href: "#cakes" },
+  { name: "Gallery", href: "/gallery", isPage: true },
   { name: "Testimonials", href: "#testimonials" },
   { name: "Order", href: "#order" },
 ];
@@ -36,14 +38,24 @@ export function Header() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              onClick={(e) => { e.preventDefault(); scrollToSection(link.href); }}
-              className="font-body text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
-            >
-              {link.name}
-            </a>
+            'isPage' in link && link.isPage ? (
+              <Link
+                key={link.name}
+                to={link.href}
+                className="font-body text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
+              >
+                {link.name}
+              </Link>
+            ) : (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={(e) => { e.preventDefault(); scrollToSection(link.href); }}
+                className="font-body text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
+              >
+                {link.name}
+              </a>
+            )
           ))}
           <Button 
             variant="hero" 
@@ -76,14 +88,25 @@ export function Header() {
           >
             <div className="container py-4 flex flex-col gap-4">
               {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={(e) => { e.preventDefault(); scrollToSection(link.href); }}
-                  className="font-body text-base font-medium text-foreground/80 hover:text-primary transition-colors py-2"
-                >
-                  {link.name}
-                </a>
+                'isPage' in link && link.isPage ? (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    className="font-body text-base font-medium text-foreground/80 hover:text-primary transition-colors py-2"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    onClick={(e) => { e.preventDefault(); scrollToSection(link.href); }}
+                    className="font-body text-base font-medium text-foreground/80 hover:text-primary transition-colors py-2"
+                  >
+                    {link.name}
+                  </a>
+                )
               ))}
               <Button 
                 variant="hero" 

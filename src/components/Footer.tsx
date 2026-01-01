@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Instagram, Facebook, MessageCircle, Mail, Phone, MapPin } from "lucide-react";
+import { Instagram, Facebook, Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 
@@ -37,12 +37,12 @@ export function Footer() {
               Every cake tells a story — let us create yours.
             </p>
             <Button 
-              variant="whatsapp" 
+              variant="gold" 
               size="default"
-              onClick={() => window.open("https://wa.me/27000000000", "_blank")}
+              onClick={() => window.open("tel:+27000000000")}
             >
-              <MessageCircle className="w-4 h-4" />
-              Chat on WhatsApp
+              <Phone className="w-4 h-4" />
+              Give Us a Call
             </Button>
           </div>
 

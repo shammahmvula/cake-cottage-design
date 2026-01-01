@@ -5,25 +5,25 @@ import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 
 const testimonials = [
   {
-    name: "Sarah M.",
+    name: "Nombulelo M.",
     role: "Wedding Client",
     content: "Melody created the most stunning wedding cake for our special day. The buttercream flowers were absolutely breathtaking, and the taste was even better than it looked!",
     rating: 5,
   },
   {
-    name: "David K.",
+    name: "Thabo K.",
     role: "Corporate Client",
     content: "We've been ordering from The Cake Cottage for all our corporate events. The quality and presentation are consistently excellent. Highly recommended!",
     rating: 5,
   },
   {
-    name: "Linda T.",
+    name: "Lerato T.",
     role: "Birthday Celebration",
     content: "The chocolate cake was divine! My mother's 60th birthday was made extra special thanks to Melody's incredible creation. Everyone couldn't stop talking about it.",
     rating: 5,
   },
   {
-    name: "James O.",
+    name: "Sipho N.",
     role: "Anniversary Party",
     content: "From the initial consultation to the delivery, the experience was seamless. The red velvet cake was moist, flavorful, and absolutely gorgeous.",
     rating: 5,

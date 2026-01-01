@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { X, ChevronLeft, ChevronRight, ArrowLeft, Cake } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.png";
 
 import heroCake from "@/assets/hero-cake.jpg";
 import chocolateCake from "@/assets/chocolate-cake.jpg";
@@ -62,11 +63,8 @@ export default function Gallery() {
       {/* Header */}
       <header className="bg-card/95 backdrop-blur-md shadow-soft sticky top-0 z-40">
         <div className="container flex items-center justify-between h-16 md:h-20">
-          <Link
-            to="/"
-            className="font-display text-xl md:text-2xl font-semibold text-primary"
-          >
-            The Cake Cottage
+          <Link to="/" className="flex items-center">
+            <img src={logo} alt="The Cake Cottage" className="h-12 md:h-14 w-auto" />
           </Link>
           <Link to="/">
             <Button variant="ghost" size="sm">

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Instagram, Facebook, MessageCircle, Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.png";
 
 const socialLinks = [
   { icon: Instagram, href: "https://instagram.com/thecakecottage", label: "Instagram" },
@@ -30,12 +31,7 @@ export function Footer() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <h3 className="font-display text-2xl font-bold text-gold mb-4">
-              The Cake Cottage
-            </h3>
-            <p className="font-display text-lg italic text-gold/80 mb-4">
-              "Where Taste Meets Elegance"
-            </p>
+            <img src={logo} alt="The Cake Cottage" className="h-16 w-auto mb-4" />
             <p className="font-body text-gold-light/70 mb-6 max-w-md">
               Artisan buttercream cakes handcrafted with love in Vaal, Johannesburg. 
               Every cake tells a story — let us create yours.

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Menu, X, Phone, Image } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.png";
 
 const navLinks = [
   { name: "Home", href: "#home" },
@@ -30,9 +31,9 @@ export function Header() {
         <a 
           href="#home" 
           onClick={(e) => { e.preventDefault(); scrollToSection("#home"); }}
-          className="font-display text-xl md:text-2xl font-semibold text-primary"
+          className="flex items-center"
         >
-          The Cake Cottage
+          <img src={logo} alt="The Cake Cottage" className="h-12 md:h-14 w-auto" />
         </a>
 
         {/* Desktop Navigation */}

@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Send, MapPin, Truck, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const cakeTypes = [
   "Buttercream Cake",
@@ -29,17 +30,39 @@ export function OrderForm() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    const formData = new FormData(e.currentTarget);
+    
+    const inquiryData = {
+      name: formData.get("name") as string,
+      contact: formData.get("contact") as string,
+      cake_type: formData.get("cakeType") as string,
+      event_type: (formData.get("eventType") as string) || null,
+      delivery_option: formData.get("delivery") as string,
+      delivery_location: (formData.get("location") as string) || null,
+      date_needed: formData.get("date") as string,
+      additional_notes: (formData.get("notes") as string) || null,
+    };
 
-    toast({
-      title: "Inquiry Submitted!",
-      description: "Thank you for your order inquiry. Melody will get back to you within 24 hours.",
-    });
+    const { error } = await supabase
+      .from("order_inquiries")
+      .insert([inquiryData]);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again or WhatsApp us directly.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Inquiry Submitted!",
+        description: "Thank you for your order inquiry. Melody will get back to you within 24 hours.",
+      });
+      (e.target as HTMLFormElement).reset();
+      setDeliveryOption("");
+    }
 
     setIsSubmitting(false);
-    (e.target as HTMLFormElement).reset();
-    setDeliveryOption("");
   };
 
   return (

@@ -194,6 +194,9 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
   // Trigger confetti when reaching step 6 (congratulations step)
   useEffect(() => {
     if (currentStep === 6 && !isDisqualified && !isSubmitted) {
+      // Brand colors: Primary Purple, Secondary Green, Muted Gold, Accent Aqua
+      const brandColors = ['#8259F0', '#429E69', '#E3D081', '#78E0DC'];
+      
       // Fire confetti from both sides
       const duration = 2000;
       const end = Date.now() + duration;
@@ -204,14 +207,14 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
           angle: 60,
           spread: 55,
           origin: { x: 0, y: 0.6 },
-          colors: ['#f472b6', '#c084fc', '#fb923c', '#facc15']
+          colors: brandColors
         });
         confetti({
           particleCount: 3,
           angle: 120,
           spread: 55,
           origin: { x: 1, y: 0.6 },
-          colors: ['#f472b6', '#c084fc', '#fb923c', '#facc15']
+          colors: brandColors
         });
 
         if (Date.now() < end) {

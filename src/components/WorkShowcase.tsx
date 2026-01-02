@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useState } from "react";
 import { useInView } from "framer-motion";
+import { Lightbox } from "./Lightbox";
 
 // User uploaded cupcakes
 import colorfulCupcakes from "@/assets/colorful-cupcakes.jpg";
@@ -113,6 +114,8 @@ function shuffleWithConstraint(arr: typeof allImages): typeof allImages {
 export function WorkShowcase() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Shuffle images once on component mount with memoization
   const shuffledImages = useMemo(() => shuffleWithConstraint(allImages), []);
@@ -126,85 +129,103 @@ export function WorkShowcase() {
   const duplicatedRow1 = [...row1Images, ...row1Images];
   const duplicatedRow2 = [...row2Images, ...row2Images];
 
+  const handleImageClick = (image: typeof shuffledImages[0]) => {
+    const index = shuffledImages.findIndex(img => img.src === image.src);
+    setCurrentImageIndex(index);
+    setLightboxOpen(true);
+  };
+
   return (
-    <section className="py-16 md:py-24 bg-secondary/30 overflow-hidden" ref={ref}>
-      <div className="container mx-auto px-4 mb-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
-            Our Wall of Work
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            A glimpse into the cakes we've lovingly crafted for our wonderful clients
-          </p>
-        </motion.div>
-      </div>
+    <>
+      <section className="py-16 md:py-24 bg-secondary/30 overflow-hidden" ref={ref}>
+        <div className="container mx-auto px-4 mb-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
+              Our Wall of Work
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              A glimpse into the cakes we've lovingly crafted for our wonderful clients
+            </p>
+          </motion.div>
+        </div>
 
-      {/* First row - scrolls left */}
-      <div className="relative mb-6">
-        <motion.div
-          className="flex gap-6"
-          animate={{
-            x: [0, -50 * row1Images.length * 16],
-          }}
-          transition={{
-            x: {
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 40,
-              ease: "linear",
-            },
-          }}
-        >
-          {duplicatedRow1.map((cake, index) => (
-            <div
-              key={`row1-${index}`}
-              className="flex-shrink-0 w-64 md:w-80 aspect-square rounded-2xl overflow-hidden shadow-lg"
-            >
-              <img
-                src={cake.src}
-                alt={cake.title}
-                className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-              />
-            </div>
-          ))}
-        </motion.div>
-      </div>
+        {/* First row - scrolls left */}
+        <div className="relative mb-6">
+          <motion.div
+            className="flex gap-6"
+            animate={{
+              x: [0, -50 * row1Images.length * 16],
+            }}
+            transition={{
+              x: {
+                repeat: Infinity,
+                repeatType: "loop",
+                duration: 40,
+                ease: "linear",
+              },
+            }}
+          >
+            {duplicatedRow1.map((cake, index) => (
+              <button
+                key={`row1-${index}`}
+                onClick={() => handleImageClick(cake)}
+                className="flex-shrink-0 w-64 md:w-80 aspect-square rounded-2xl overflow-hidden shadow-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              >
+                <img
+                  src={cake.src}
+                  alt={cake.title}
+                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                />
+              </button>
+            ))}
+          </motion.div>
+        </div>
 
-      {/* Second row - scrolls right */}
-      <div className="relative">
-        <motion.div
-          className="flex gap-6"
-          animate={{
-            x: [-50 * row2Images.length * 16, 0],
-          }}
-          transition={{
-            x: {
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 45,
-              ease: "linear",
-            },
-          }}
-        >
-          {duplicatedRow2.map((cake, index) => (
-            <div
-              key={`row2-${index}`}
-              className="flex-shrink-0 w-64 md:w-80 aspect-square rounded-2xl overflow-hidden shadow-lg"
-            >
-              <img
-                src={cake.src}
-                alt={cake.title}
-                className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-              />
-            </div>
-          ))}
-        </motion.div>
-      </div>
-    </section>
+        {/* Second row - scrolls right */}
+        <div className="relative">
+          <motion.div
+            className="flex gap-6"
+            animate={{
+              x: [-50 * row2Images.length * 16, 0],
+            }}
+            transition={{
+              x: {
+                repeat: Infinity,
+                repeatType: "loop",
+                duration: 45,
+                ease: "linear",
+              },
+            }}
+          >
+            {duplicatedRow2.map((cake, index) => (
+              <button
+                key={`row2-${index}`}
+                onClick={() => handleImageClick(cake)}
+                className="flex-shrink-0 w-64 md:w-80 aspect-square rounded-2xl overflow-hidden shadow-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              >
+                <img
+                  src={cake.src}
+                  alt={cake.title}
+                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                />
+              </button>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      <Lightbox
+        images={shuffledImages}
+        currentIndex={currentImageIndex}
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        onNavigate={setCurrentImageIndex}
+      />
+    </>
   );
 }

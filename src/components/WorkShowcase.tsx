@@ -2,12 +2,7 @@ import { motion } from "framer-motion";
 import { useRef, useMemo } from "react";
 import { useInView } from "framer-motion";
 
-import buttercreamCake from "@/assets/buttercream-cake.jpg";
-import chocolateCake from "@/assets/chocolate-cake.jpg";
-import redVelvetCake from "@/assets/red-velvet-cake.jpg";
-import carrotCake from "@/assets/carrot-cake.jpg";
-import cupcakes from "@/assets/cupcakes.jpg";
-import heroCake from "@/assets/hero-cake.jpg";
+// User uploaded cupcakes
 import colorfulCupcakes from "@/assets/colorful-cupcakes.jpg";
 import frozenCupcakes from "@/assets/frozen-cupcakes.jpg";
 import daisyCupcakes from "@/assets/daisy-cupcakes.jpg";
@@ -18,6 +13,9 @@ import superheroBoxedCupcakes from "@/assets/superhero-boxed-cupcakes.jpg";
 import blueyCupcakes from "@/assets/bluey-cupcakes.jpg";
 import sonicCupcakes from "@/assets/sonic-cupcakes.jpg";
 import roseCupcakes from "@/assets/rose-cupcakes.jpg";
+import blackGoldCupcakeSet from "@/assets/black-gold-cupcake-set.jpg";
+
+// User uploaded cakes
 import popItCake from "@/assets/pop-it-cake.jpg";
 import lollipopCake from "@/assets/lollipop-cake.jpg";
 import balloonGirlCake from "@/assets/balloon-girl-cake.jpg";
@@ -28,7 +26,6 @@ import policeUniformCake from "@/assets/police-uniform-cake.jpg";
 import graduationCapCake from "@/assets/graduation-cap-cake.jpg";
 import blackGoldGraduationCake from "@/assets/black-gold-graduation-cake.jpg";
 import pencilGraduationCake from "@/assets/pencil-graduation-cake.jpg";
-import blackGoldCupcakeSet from "@/assets/black-gold-cupcake-set.jpg";
 import crownBirthdayCake from "@/assets/crown-birthday-cake.jpg";
 import kindergartenCake from "@/assets/kindergarten-cake.jpg";
 import goldCrownCake from "@/assets/gold-crown-cake.jpg";
@@ -36,11 +33,7 @@ import firstGradeCake from "@/assets/first-grade-cake.jpg";
 
 // All images with category tags for smart shuffling
 const allImages = [
-  { src: buttercreamCake, title: "Elegant Buttercream", category: "cake" },
-  { src: chocolateCake, title: "Rich Chocolate", category: "cake" },
-  { src: redVelvetCake, title: "Classic Red Velvet", category: "cake" },
-  { src: carrotCake, title: "Spiced Carrot", category: "cake" },
-  { src: heroCake, title: "Celebration Cake", category: "cake" },
+  // Cakes
   { src: popItCake, title: "Pop It Butterfly Cake", category: "cake" },
   { src: lollipopCake, title: "Lollipop Dreams Cake", category: "cake" },
   { src: balloonGirlCake, title: "Balloon Princess Cake", category: "cake" },
@@ -55,7 +48,7 @@ const allImages = [
   { src: kindergartenCake, title: "Kindergarten Grad Cake", category: "cake" },
   { src: goldCrownCake, title: "Gold Crown Birthday", category: "cake" },
   { src: firstGradeCake, title: "First Grade Cake", category: "cake" },
-  { src: cupcakes, title: "Artisan Cupcakes", category: "cupcake" },
+  // Cupcakes
   { src: colorfulCupcakes, title: "Rainbow Swirl Cupcakes", category: "cupcake" },
   { src: frozenCupcakes, title: "Frozen Theme Cupcakes", category: "cupcake" },
   { src: daisyCupcakes, title: "Spring Daisy Cupcakes", category: "cupcake" },

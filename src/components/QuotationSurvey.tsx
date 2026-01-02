@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ArrowLeft, ArrowRight, Send, CheckCircle2, Frown, Phone } from "lucide-react";
+import { ArrowLeft, ArrowRight, Send, CheckCircle2, Frown, Phone, PartyPopper } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -747,6 +747,21 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
           {/* Step 6: Contact Details */}
           {currentStep === 6 && (
             <>
+              {/* Congratulations banner */}
+              <div className="mb-6 p-4 bg-secondary/10 rounded-xl border border-secondary/20">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center">
+                    <PartyPopper className="w-5 h-5 text-secondary" />
+                  </div>
+                  <div>
+                    <h4 className="font-display font-bold text-foreground">You Qualify! 🎉</h4>
+                    <p className="font-body text-sm text-foreground/70">
+                      Just share your details below to receive your complete quotation.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <Label className="font-body font-medium text-foreground">
                   Your Full Name *
@@ -857,7 +872,7 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
               >
                 {isSubmitting ? "Submitting..." : (
                   <>
-                    Submit Inquiry
+                    Get A Quotation
                     <Send className="w-4 h-4 ml-2" />
                   </>
                 )}

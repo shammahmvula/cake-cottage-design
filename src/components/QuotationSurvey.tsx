@@ -29,8 +29,8 @@ const timeframes = [
 
 const budgetRanges = [
   "Under R500",
-  "R500 – R1,000",
-  "R1,000 – R2,500",
+  "R850 – R1,500",
+  "R1,500 – R2,500",
   "R2,500 – R5,000",
   "R5,000+ (premium/wedding cakes)",
 ];

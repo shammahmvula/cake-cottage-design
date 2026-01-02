@@ -453,7 +453,7 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
               variant="hero" 
               asChild
             >
-              <a href="tel:+27820738247">
+              <a href="tel:+27662522079">
                 <Phone className="w-4 h-4 mr-2" />
                 Call Melody
               </a>
@@ -468,7 +468,7 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
 
     if (isSubmitted) {
       // Generate sanitized WhatsApp URL with order details
-      const whatsappUrl = buildWhatsAppUrl("27820738247", {
+      const whatsappUrl = buildWhatsAppUrl("27662522079", {
         name: formData.name,
         cakeType: formData.cakeType,
         occasion: formData.occasion,

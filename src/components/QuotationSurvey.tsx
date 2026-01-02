@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ArrowLeft, ArrowRight, Send, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Send, CheckCircle2, Frown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -141,6 +141,7 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isDisqualified, setIsDisqualified] = useState(false);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -192,7 +193,9 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
   const canProceed = () => {
     switch (currentStep) {
       case 1:
+        // Don't allow proceeding if budget is under R500
         return formData.servingSize && formData.budget && formData.delivery &&
+          formData.budget !== "Under R500" &&
           (!formData.delivery.includes("Yes") || formData.deliveryLocation);
       case 2:
         return formData.tiers && formData.shape &&
@@ -211,8 +214,23 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
     }
   };
 
+  // Check if user passed the terms confirmation
+  const hasPassedTerms = () => {
+    // Check that all confirmation questions have a "Yes" answer (starts with "Yes")
+    return confirmationQuestions.every(q => 
+      formData.confirmations[q.id]?.startsWith("Yes")
+    );
+  };
+
   const handleNext = () => {
     if (currentStep < TOTAL_STEPS) {
+      // After step 5 (terms), check if they qualified
+      if (currentStep === 5) {
+        if (!hasPassedTerms()) {
+          setIsDisqualified(true);
+          return;
+        }
+      }
       setCurrentStep(prev => prev + 1);
     }
   };
@@ -291,6 +309,7 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
   const handleClose = () => {
     setCurrentStep(1);
     setIsSubmitted(false);
+    setIsDisqualified(false);
     setFormData({
       cakeType: "",
       occasion: "",
@@ -319,6 +338,9 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
     onClose();
   };
 
+  // Check if budget is too low
+  const isBudgetTooLow = formData.budget === "Under R500";
+
   const stepTitles = [
     "Order Basics",
     "Size & Shape",
@@ -329,6 +351,47 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
   ];
 
   const renderStepContent = () => {
+    // Disqualification screen
+    if (isDisqualified) {
+      return (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center py-8"
+        >
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-destructive/10 flex items-center justify-center">
+            <Frown className="w-10 h-10 text-destructive" />
+          </div>
+          <h3 className="font-display text-2xl font-bold text-foreground mb-4">
+            We're Not the Right Fit Right Now
+          </h3>
+          <p className="font-body text-foreground/70 mb-4">
+            Thank you for your interest in Melody's Cakes! Unfortunately, based on your responses, 
+            we may not be the best match for your current needs.
+          </p>
+          <p className="font-body text-foreground/70 mb-6">
+            Our custom cakes require a mutual understanding of our crafting process, including deposits, 
+            lead times, and the artisan nature of our work. If you'd like to reconsider and agree to 
+            our terms, we'd love to work with you in the future.
+          </p>
+          <div className="flex flex-col gap-3">
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setIsDisqualified(false);
+                setFormData(prev => ({ ...prev, confirmations: {} }));
+              }}
+            >
+              Go Back & Reconsider
+            </Button>
+            <Button variant="hero" onClick={handleClose}>
+              Close
+            </Button>
+          </div>
+        </motion.div>
+      );
+    }
+
     if (isSubmitted) {
       return (
         <motion.div
@@ -386,7 +449,7 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
                   What is your budget range? *
                 </Label>
                 <Select value={formData.budget} onValueChange={(v) => updateFormData("budget", v)}>
-                  <SelectTrigger className="h-12 font-body">
+                  <SelectTrigger className={`h-12 font-body ${isBudgetTooLow ? 'border-destructive' : ''}`}>
                     <SelectValue placeholder="Select budget range" />
                   </SelectTrigger>
                   <SelectContent>
@@ -395,6 +458,19 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
                     ))}
                   </SelectContent>
                 </Select>
+                {isBudgetTooLow && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="mt-2"
+                  >
+                    <p className="text-destructive text-sm font-body font-medium">
+                      ⚠️ Unfortunately, we don't currently offer custom cakes under R500. Our artisan cakes 
+                      start at R500 due to the quality ingredients and craftsmanship involved. Please select 
+                      a higher budget range to continue, or feel free to reach out if you have questions!
+                    </p>
+                  </motion.div>
+                )}
               </div>
 
               <div className="space-y-2">

@@ -177,6 +177,8 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
     contact: "",
     email: "",
     notes: "",
+    // Honeypot for spam protection (hidden field)
+    honeypot: "",
   });
 
   const updateFormData = (field: string, value: string) => {
@@ -319,23 +321,46 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
       delivery_location: needsDelivery ? formData.deliveryLocation : null,
       date_needed: new Date().toISOString().split('T')[0],
       additional_notes: combinedNotes,
+      honeypot: formData.honeypot, // Hidden field for bot detection
     };
 
-    const { error } = await supabase
-      .from("order_inquiries")
-      .insert([inquiryData]);
+    try {
+      const { data, error } = await supabase.functions.invoke('submit-order-inquiry', {
+        body: inquiryData
+      });
 
-    if (error) {
+      if (error) {
+        console.error('Submission error:', error);
+        toast({
+          title: "Error",
+          description: "Something went wrong. Please try again or call us directly.",
+          variant: "destructive",
+        });
+      } else if (data?.rateLimited) {
+        toast({
+          title: "Too Many Requests",
+          description: "Please wait a while before submitting again.",
+          variant: "destructive",
+        });
+      } else if (data?.error) {
+        toast({
+          title: "Validation Error",
+          description: data.error,
+          variant: "destructive",
+        });
+      } else {
+        setIsSubmitted(true);
+        toast({
+          title: "Inquiry Submitted!",
+          description: "Thank you! We'll send you a quotation within 24 hours.",
+        });
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
       toast({
         title: "Error",
         description: "Something went wrong. Please try again or call us directly.",
         variant: "destructive",
-      });
-    } else {
-      setIsSubmitted(true);
-      toast({
-        title: "Inquiry Submitted!",
-        description: "Thank you! We'll send you a quotation within 24 hours.",
       });
     }
 
@@ -370,6 +395,7 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
       contact: "",
       email: "",
       notes: "",
+      honeypot: "",
     });
     onClose();
   };
@@ -880,6 +906,27 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
                   onChange={(e) => updateFormData("notes", e.target.value)}
                   placeholder="Anything else you'd like us to know..."
                   className="min-h-[100px] font-body"
+                />
+              </div>
+
+              {/* Honeypot field - hidden from users, visible to bots */}
+              <div 
+                aria-hidden="true" 
+                style={{ 
+                  position: 'absolute', 
+                  left: '-9999px', 
+                  opacity: 0, 
+                  pointerEvents: 'none' 
+                }}
+              >
+                <Label htmlFor="website">Website</Label>
+                <Input
+                  id="website"
+                  name="website"
+                  value={formData.honeypot}
+                  onChange={(e) => updateFormData("honeypot", e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
                 />
               </div>
             </>

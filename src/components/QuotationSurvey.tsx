@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ArrowLeft, ArrowRight, Send, CheckCircle2, Frown } from "lucide-react";
+import { ArrowLeft, ArrowRight, Send, CheckCircle2, Frown, Phone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -374,6 +374,9 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
             lead times, and the artisan nature of our work. If you'd like to reconsider and agree to 
             our terms, we'd love to work with you in the future.
           </p>
+          <p className="font-body text-sm text-foreground/50 mb-6">
+            Have questions? Give Melody a call to discuss your needs.
+          </p>
           <div className="flex flex-col gap-3">
             <Button 
               variant="outline" 
@@ -384,7 +387,16 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
             >
               Go Back & Reconsider
             </Button>
-            <Button variant="hero" onClick={handleClose}>
+            <Button 
+              variant="hero" 
+              asChild
+            >
+              <a href="tel:+27123456789">
+                <Phone className="w-4 h-4 mr-2" />
+                Call Melody
+              </a>
+            </Button>
+            <Button variant="ghost" onClick={handleClose} className="text-foreground/60">
               Close
             </Button>
           </div>

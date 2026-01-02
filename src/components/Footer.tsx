@@ -39,7 +39,7 @@ export function Footer() {
             <Button 
               variant="gold" 
               size="default"
-              onClick={() => window.open("tel:+27000000000")}
+              onClick={() => window.open("tel:+27820738247")}
             >
               <Phone className="w-4 h-4" />
               Give Us a Call
@@ -79,11 +79,11 @@ export function Footer() {
                 hello@thecakecottage.co.za
               </a>
               <a
-                href="tel:+27000000000"
+                href="tel:+27820738247"
                 className="flex items-center gap-3 font-body text-gold-light/70 hover:text-gold transition-colors"
               >
                 <Phone className="w-5 h-5 text-secondary" />
-                +27 00 000 0000
+                082 073 8247
               </a>
               <div className="flex items-start gap-3 font-body text-gold-light/70">
                 <MapPin className="w-5 h-5 text-muted flex-shrink-0 mt-0.5" />

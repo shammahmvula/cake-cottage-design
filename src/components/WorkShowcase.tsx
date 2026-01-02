@@ -30,6 +30,16 @@ import crownBirthdayCake from "@/assets/crown-birthday-cake.jpg";
 import kindergartenCake from "@/assets/kindergarten-cake.jpg";
 import goldCrownCake from "@/assets/gold-crown-cake.jpg";
 import firstGradeCake from "@/assets/first-grade-cake.jpg";
+import blueOmbreCake from "@/assets/blue-ombre-birthday-cake.jpg";
+import goldWhiteDadCake from "@/assets/gold-white-dad-cake.jpg";
+import vintageDripCake from "@/assets/vintage-drip-cake.jpg";
+import greenCreamCake from "@/assets/green-cream-birthday-cake.jpg";
+import blackGoldElegantCake from "@/assets/black-gold-elegant-cake.jpg";
+import tuxedoDadCake from "@/assets/tuxedo-dad-cake.jpg";
+import blueGroomCake from "@/assets/blue-groom-cake.jpg";
+import goldenJubileeCake from "@/assets/golden-jubilee-cake.jpg";
+import threeTierBlueCake from "@/assets/three-tier-blue-cake.jpg";
+import cheers50Cake from "@/assets/cheers-50-number-cake.jpg";
 
 // All images with category tags for smart shuffling
 const allImages = [
@@ -48,6 +58,16 @@ const allImages = [
   { src: kindergartenCake, title: "Kindergarten Grad Cake", category: "cake" },
   { src: goldCrownCake, title: "Gold Crown Birthday", category: "cake" },
   { src: firstGradeCake, title: "First Grade Cake", category: "cake" },
+  { src: blueOmbreCake, title: "Blue Ombré Birthday Cake", category: "cake" },
+  { src: goldWhiteDadCake, title: "Gold & White Dad Cake", category: "cake" },
+  { src: vintageDripCake, title: "Vintage Drip Cake", category: "cake" },
+  { src: greenCreamCake, title: "Mint Green Birthday Cake", category: "cake" },
+  { src: blackGoldElegantCake, title: "Elegant Black & Gold Cake", category: "cake" },
+  { src: tuxedoDadCake, title: "Tuxedo Father's Day Cake", category: "cake" },
+  { src: blueGroomCake, title: "Groom To Be Cake", category: "cake" },
+  { src: goldenJubileeCake, title: "Golden Jubilee Cake", category: "cake" },
+  { src: threeTierBlueCake, title: "Three Tier Blue Cake", category: "cake" },
+  { src: cheers50Cake, title: "Cheers to 50 Number Cake", category: "cake" },
   // Cupcakes
   { src: colorfulCupcakes, title: "Rainbow Swirl Cupcakes", category: "cupcake" },
   { src: frozenCupcakes, title: "Frozen Theme Cupcakes", category: "cupcake" },

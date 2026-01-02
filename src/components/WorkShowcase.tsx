@@ -23,6 +23,16 @@ import lollipopCake from "@/assets/lollipop-cake.jpg";
 import balloonGirlCake from "@/assets/balloon-girl-cake.jpg";
 import sofiaPrincessCake from "@/assets/sofia-princess-cake.jpg";
 import butterflyPrincessCake from "@/assets/butterfly-princess-cake.jpg";
+import starryBirthdayCake from "@/assets/starry-birthday-cake.jpg";
+import policeUniformCake from "@/assets/police-uniform-cake.jpg";
+import graduationCapCake from "@/assets/graduation-cap-cake.jpg";
+import blackGoldGraduationCake from "@/assets/black-gold-graduation-cake.jpg";
+import pencilGraduationCake from "@/assets/pencil-graduation-cake.jpg";
+import blackGoldCupcakeSet from "@/assets/black-gold-cupcake-set.jpg";
+import crownBirthdayCake from "@/assets/crown-birthday-cake.jpg";
+import kindergartenCake from "@/assets/kindergarten-cake.jpg";
+import goldCrownCake from "@/assets/gold-crown-cake.jpg";
+import firstGradeCake from "@/assets/first-grade-cake.jpg";
 
 // All images with category tags for smart shuffling
 const allImages = [
@@ -36,6 +46,15 @@ const allImages = [
   { src: balloonGirlCake, title: "Balloon Princess Cake", category: "cake" },
   { src: sofiaPrincessCake, title: "Sofia Princess Cake", category: "cake" },
   { src: butterflyPrincessCake, title: "Butterfly Princess Cake", category: "cake" },
+  { src: starryBirthdayCake, title: "Starry Birthday Cake", category: "cake" },
+  { src: policeUniformCake, title: "Police Uniform Cake", category: "cake" },
+  { src: graduationCapCake, title: "Graduation Cap Cake", category: "cake" },
+  { src: blackGoldGraduationCake, title: "Black & Gold Graduation", category: "cake" },
+  { src: pencilGraduationCake, title: "Colorful Pencil Cake", category: "cake" },
+  { src: crownBirthdayCake, title: "Royal Crown Cake", category: "cake" },
+  { src: kindergartenCake, title: "Kindergarten Grad Cake", category: "cake" },
+  { src: goldCrownCake, title: "Gold Crown Birthday", category: "cake" },
+  { src: firstGradeCake, title: "First Grade Cake", category: "cake" },
   { src: cupcakes, title: "Artisan Cupcakes", category: "cupcake" },
   { src: colorfulCupcakes, title: "Rainbow Swirl Cupcakes", category: "cupcake" },
   { src: frozenCupcakes, title: "Frozen Theme Cupcakes", category: "cupcake" },
@@ -47,6 +66,7 @@ const allImages = [
   { src: blueyCupcakes, title: "Bluey Cupcakes", category: "cupcake" },
   { src: sonicCupcakes, title: "Sonic Cupcakes", category: "cupcake" },
   { src: roseCupcakes, title: "Rose Swirl Cupcakes", category: "cupcake" },
+  { src: blackGoldCupcakeSet, title: "Black & Gold Cupcake Set", category: "cupcake" },
 ];
 
 // Fisher-Yates shuffle with constraint: no same category adjacent

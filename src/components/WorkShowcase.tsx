@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { useInView } from "framer-motion";
 
 import buttercreamCake from "@/assets/buttercream-cake.jpg";
@@ -8,22 +8,78 @@ import redVelvetCake from "@/assets/red-velvet-cake.jpg";
 import carrotCake from "@/assets/carrot-cake.jpg";
 import cupcakes from "@/assets/cupcakes.jpg";
 import heroCake from "@/assets/hero-cake.jpg";
+import colorfulCupcakes from "@/assets/colorful-cupcakes.jpg";
+import frozenCupcakes from "@/assets/frozen-cupcakes.jpg";
+import daisyCupcakes from "@/assets/daisy-cupcakes.jpg";
+import pawPatrolCupcakes from "@/assets/paw-patrol-cupcakes.jpg";
+import butterflyCupcakes from "@/assets/butterfly-cupcakes.jpg";
+import superheroCupcakes from "@/assets/superhero-cupcakes.jpg";
+import superheroBoxedCupcakes from "@/assets/superhero-boxed-cupcakes.jpg";
+import blueyCupcakes from "@/assets/bluey-cupcakes.jpg";
+import sonicCupcakes from "@/assets/sonic-cupcakes.jpg";
+import roseCupcakes from "@/assets/rose-cupcakes.jpg";
 
-const cakeImages = [
-  { src: buttercreamCake, title: "Elegant Buttercream" },
-  { src: chocolateCake, title: "Rich Chocolate" },
-  { src: redVelvetCake, title: "Classic Red Velvet" },
-  { src: carrotCake, title: "Spiced Carrot" },
-  { src: cupcakes, title: "Artisan Cupcakes" },
-  { src: heroCake, title: "Celebration Cake" },
+// All images with category tags for smart shuffling
+const allImages = [
+  { src: buttercreamCake, title: "Elegant Buttercream", category: "cake" },
+  { src: chocolateCake, title: "Rich Chocolate", category: "cake" },
+  { src: redVelvetCake, title: "Classic Red Velvet", category: "cake" },
+  { src: carrotCake, title: "Spiced Carrot", category: "cake" },
+  { src: heroCake, title: "Celebration Cake", category: "cake" },
+  { src: cupcakes, title: "Artisan Cupcakes", category: "cupcake" },
+  { src: colorfulCupcakes, title: "Rainbow Swirl Cupcakes", category: "cupcake" },
+  { src: frozenCupcakes, title: "Frozen Theme Cupcakes", category: "cupcake" },
+  { src: daisyCupcakes, title: "Spring Daisy Cupcakes", category: "cupcake" },
+  { src: pawPatrolCupcakes, title: "Paw Patrol Cupcakes", category: "cupcake" },
+  { src: butterflyCupcakes, title: "Butterfly Garden Cupcakes", category: "cupcake" },
+  { src: superheroCupcakes, title: "Superhero Cupcakes", category: "cupcake" },
+  { src: superheroBoxedCupcakes, title: "Superhero Gift Box", category: "cupcake" },
+  { src: blueyCupcakes, title: "Bluey Cupcakes", category: "cupcake" },
+  { src: sonicCupcakes, title: "Sonic Cupcakes", category: "cupcake" },
+  { src: roseCupcakes, title: "Rose Swirl Cupcakes", category: "cupcake" },
 ];
 
-// Double the array for seamless loop
-const duplicatedImages = [...cakeImages, ...cakeImages];
+// Fisher-Yates shuffle with constraint: no same category adjacent
+function shuffleWithConstraint(arr: typeof allImages): typeof allImages {
+  const shuffled = [...arr];
+  
+  // First, do a basic shuffle
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  
+  // Then, fix adjacent same-category items
+  for (let i = 0; i < shuffled.length - 1; i++) {
+    if (shuffled[i].category === shuffled[i + 1].category) {
+      // Find a different category item to swap with
+      for (let j = i + 2; j < shuffled.length; j++) {
+        if (shuffled[j].category !== shuffled[i].category) {
+          [shuffled[i + 1], shuffled[j]] = [shuffled[j], shuffled[i + 1]];
+          break;
+        }
+      }
+    }
+  }
+  
+  return shuffled;
+}
 
 export function WorkShowcase() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
+
+  // Shuffle images once on component mount with memoization
+  const shuffledImages = useMemo(() => shuffleWithConstraint(allImages), []);
+  
+  // Split into two rows
+  const midpoint = Math.ceil(shuffledImages.length / 2);
+  const row1Images = shuffledImages.slice(0, midpoint);
+  const row2Images = shuffledImages.slice(midpoint);
+  
+  // Duplicate for seamless loop
+  const duplicatedRow1 = [...row1Images, ...row1Images];
+  const duplicatedRow2 = [...row2Images, ...row2Images];
 
   return (
     <section className="py-16 md:py-24 bg-secondary/30 overflow-hidden" ref={ref}>
@@ -48,18 +104,18 @@ export function WorkShowcase() {
         <motion.div
           className="flex gap-6"
           animate={{
-            x: [0, -50 * cakeImages.length * 16],
+            x: [0, -50 * row1Images.length * 16],
           }}
           transition={{
             x: {
               repeat: Infinity,
               repeatType: "loop",
-              duration: 30,
+              duration: 40,
               ease: "linear",
             },
           }}
         >
-          {duplicatedImages.map((cake, index) => (
+          {duplicatedRow1.map((cake, index) => (
             <div
               key={`row1-${index}`}
               className="flex-shrink-0 w-64 md:w-80 aspect-square rounded-2xl overflow-hidden shadow-lg"
@@ -79,18 +135,18 @@ export function WorkShowcase() {
         <motion.div
           className="flex gap-6"
           animate={{
-            x: [-50 * cakeImages.length * 16, 0],
+            x: [-50 * row2Images.length * 16, 0],
           }}
           transition={{
             x: {
               repeat: Infinity,
               repeatType: "loop",
-              duration: 35,
+              duration: 45,
               ease: "linear",
             },
           }}
         >
-          {duplicatedImages.reverse().map((cake, index) => (
+          {duplicatedRow2.map((cake, index) => (
             <div
               key={`row2-${index}`}
               className="flex-shrink-0 w-64 md:w-80 aspect-square rounded-2xl overflow-hidden shadow-lg"

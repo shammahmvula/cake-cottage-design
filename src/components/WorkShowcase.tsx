@@ -40,6 +40,7 @@ import blueGroomCake from "@/assets/blue-groom-cake.jpg";
 import goldenJubileeCake from "@/assets/golden-jubilee-cake.jpg";
 import threeTierBlueCake from "@/assets/three-tier-blue-cake.jpg";
 import cheers50Cake from "@/assets/cheers-50-number-cake.jpg";
+import tiAmoHeartCake from "@/assets/ti-amo-heart-cake.jpg";
 
 // All images with category tags for smart shuffling
 const allImages = [
@@ -68,6 +69,7 @@ const allImages = [
   { src: goldenJubileeCake, title: "Golden Jubilee Cake", category: "cake" },
   { src: threeTierBlueCake, title: "Three Tier Blue Cake", category: "cake" },
   { src: cheers50Cake, title: "Cheers to 50 Number Cake", category: "cake" },
+  { src: tiAmoHeartCake, title: "Ti Amo Heart Cake", category: "cake" },
   // Cupcakes
   { src: colorfulCupcakes, title: "Rainbow Swirl Cupcakes", category: "cupcake" },
   { src: frozenCupcakes, title: "Frozen Theme Cupcakes", category: "cupcake" },

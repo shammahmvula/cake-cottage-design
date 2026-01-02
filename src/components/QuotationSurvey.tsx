@@ -426,7 +426,7 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
               variant="hero" 
               asChild
             >
-              <a href="tel:+27123456789">
+              <a href="tel:+27820738247">
                 <Phone className="w-4 h-4 mr-2" />
                 Call Melody
               </a>

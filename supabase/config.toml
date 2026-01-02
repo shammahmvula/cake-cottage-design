@@ -1,1 +1,4 @@
 project_id = "unomrwslhqedacmsxbxu"
+
+[functions.submit-order-inquiry]
+verify_jwt = false

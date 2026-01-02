@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Cake, Lock, Mail } from "lucide-react";
+import { getAuthErrorMessage } from "@/lib/auth-utils";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
@@ -62,7 +63,7 @@ export default function Auth() {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "An error occurred",
+        description: getAuthErrorMessage(error),
         variant: "destructive",
       });
     } finally {

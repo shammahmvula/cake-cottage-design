@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { ArrowLeft, ArrowRight, Send, CheckCircle2, Frown, Phone, PartyPopper, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { buildWhatsAppUrl } from "@/lib/sanitize-utils";
 
 // Step data definitions
 const servingSizes = [
@@ -440,27 +441,25 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
     }
 
     if (isSubmitted) {
-      // Generate WhatsApp message with order details
-      const whatsappMessage = encodeURIComponent(
-        `Hi Melody! 🎂\n\n` +
-        `I just submitted an order inquiry on your website. Here are my details:\n\n` +
-        `*Name:* ${formData.name}\n` +
-        `*Cake Type:* ${formData.cakeType}\n` +
-        `*Occasion:* ${formData.occasion}\n` +
-        `*Serving Size:* ${formData.servingSize}\n` +
-        `*Budget:* ${formData.budget}\n` +
-        `*Timeframe:* ${formData.timeframe}\n` +
-        `*Tiers:* ${formData.tiers}\n` +
-        `*Shape:* ${formData.shape}${formData.customShape ? ` (${formData.customShape})` : ""}\n` +
-        `*Flavour:* ${formData.flavour}${formData.otherFlavour ? ` (${formData.otherFlavour})` : ""}\n` +
-        `*Filling:* ${formData.filling}\n` +
-        `*Finish:* ${formData.finish}\n` +
-        `*Delivery:* ${formData.delivery}\n` +
-        (formData.deliveryLocation ? `*Delivery Location:* ${formData.deliveryLocation}\n` : "") +
-        (formData.notes ? `\n*Additional Notes:* ${formData.notes}\n` : "") +
-        `\nLooking forward to hearing from you! 💜`
-      );
-      const whatsappUrl = `https://wa.me/27820738247?text=${whatsappMessage}`;
+      // Generate sanitized WhatsApp URL with order details
+      const whatsappUrl = buildWhatsAppUrl("27820738247", {
+        name: formData.name,
+        cakeType: formData.cakeType,
+        occasion: formData.occasion,
+        servingSize: formData.servingSize,
+        budget: formData.budget,
+        timeframe: formData.timeframe,
+        tiers: formData.tiers,
+        shape: formData.shape,
+        customShape: formData.customShape,
+        flavour: formData.flavour,
+        otherFlavour: formData.otherFlavour,
+        filling: formData.filling,
+        finish: formData.finish,
+        delivery: formData.delivery,
+        deliveryLocation: formData.deliveryLocation,
+        notes: formData.notes,
+      });
 
       return (
         <motion.div

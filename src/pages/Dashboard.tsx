@@ -13,7 +13,6 @@ import {
   Phone,
   MapPin,
   Truck,
-  User,
   Clock,
   CheckCircle,
   XCircle,
@@ -64,23 +63,8 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (!session) {
-          navigate("/auth");
-        }
-      }
-    );
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        navigate("/auth");
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
+  // Auth is now handled by ProtectedRoute wrapper in App.tsx
+  // This component only renders when user is authenticated
 
   const fetchInquiries = async () => {
     setIsLoading(true);

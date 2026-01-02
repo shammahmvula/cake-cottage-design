@@ -18,6 +18,11 @@ import superheroBoxedCupcakes from "@/assets/superhero-boxed-cupcakes.jpg";
 import blueyCupcakes from "@/assets/bluey-cupcakes.jpg";
 import sonicCupcakes from "@/assets/sonic-cupcakes.jpg";
 import roseCupcakes from "@/assets/rose-cupcakes.jpg";
+import popItCake from "@/assets/pop-it-cake.jpg";
+import lollipopCake from "@/assets/lollipop-cake.jpg";
+import balloonGirlCake from "@/assets/balloon-girl-cake.jpg";
+import sofiaPrincessCake from "@/assets/sofia-princess-cake.jpg";
+import butterflyPrincessCake from "@/assets/butterfly-princess-cake.jpg";
 
 // All images with category tags for smart shuffling
 const allImages = [
@@ -26,6 +31,11 @@ const allImages = [
   { src: redVelvetCake, title: "Classic Red Velvet", category: "cake" },
   { src: carrotCake, title: "Spiced Carrot", category: "cake" },
   { src: heroCake, title: "Celebration Cake", category: "cake" },
+  { src: popItCake, title: "Pop It Butterfly Cake", category: "cake" },
+  { src: lollipopCake, title: "Lollipop Dreams Cake", category: "cake" },
+  { src: balloonGirlCake, title: "Balloon Princess Cake", category: "cake" },
+  { src: sofiaPrincessCake, title: "Sofia Princess Cake", category: "cake" },
+  { src: butterflyPrincessCake, title: "Butterfly Princess Cake", category: "cake" },
   { src: cupcakes, title: "Artisan Cupcakes", category: "cupcake" },
   { src: colorfulCupcakes, title: "Rainbow Swirl Cupcakes", category: "cupcake" },
   { src: frozenCupcakes, title: "Frozen Theme Cupcakes", category: "cupcake" },

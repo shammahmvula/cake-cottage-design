@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ArrowLeft, ArrowRight, Send, CheckCircle2, Frown, Phone, PartyPopper } from "lucide-react";
+import { ArrowLeft, ArrowRight, Send, CheckCircle2, Frown, Phone, PartyPopper, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -440,6 +440,28 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
     }
 
     if (isSubmitted) {
+      // Generate WhatsApp message with order details
+      const whatsappMessage = encodeURIComponent(
+        `Hi Melody! 🎂\n\n` +
+        `I just submitted an order inquiry on your website. Here are my details:\n\n` +
+        `*Name:* ${formData.name}\n` +
+        `*Cake Type:* ${formData.cakeType}\n` +
+        `*Occasion:* ${formData.occasion}\n` +
+        `*Serving Size:* ${formData.servingSize}\n` +
+        `*Budget:* ${formData.budget}\n` +
+        `*Timeframe:* ${formData.timeframe}\n` +
+        `*Tiers:* ${formData.tiers}\n` +
+        `*Shape:* ${formData.shape}${formData.customShape ? ` (${formData.customShape})` : ""}\n` +
+        `*Flavour:* ${formData.flavour}${formData.otherFlavour ? ` (${formData.otherFlavour})` : ""}\n` +
+        `*Filling:* ${formData.filling}\n` +
+        `*Finish:* ${formData.finish}\n` +
+        `*Delivery:* ${formData.delivery}\n` +
+        (formData.deliveryLocation ? `*Delivery Location:* ${formData.deliveryLocation}\n` : "") +
+        (formData.notes ? `\n*Additional Notes:* ${formData.notes}\n` : "") +
+        `\nLooking forward to hearing from you! 💜`
+      );
+      const whatsappUrl = `https://wa.me/27820738247?text=${whatsappMessage}`;
+
       return (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -455,9 +477,24 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
           <p className="font-body text-foreground/70 mb-6">
             Your inquiry has been submitted successfully. We'll review your request and send you a quotation within 24 hours.
           </p>
-          <Button variant="hero" onClick={handleClose}>
-            Close
-          </Button>
+          <p className="font-body text-sm text-foreground/50 mb-4">
+            Want a faster response? Send us a WhatsApp message with your order details!
+          </p>
+          <div className="flex flex-col gap-3">
+            <Button 
+              variant="hero" 
+              asChild
+              className="bg-[#25D366] hover:bg-[#128C7E] text-white"
+            >
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                <MessageCircle className="w-4 h-4 mr-2" />
+                Send via WhatsApp
+              </a>
+            </Button>
+            <Button variant="outline" onClick={handleClose}>
+              Close
+            </Button>
+          </div>
         </motion.div>
       );
     }

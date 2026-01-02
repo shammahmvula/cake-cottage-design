@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -189,6 +190,37 @@ export function QuotationSurvey({ isOpen, onClose, initialData }: QuotationSurve
   };
 
   const progress = (currentStep / TOTAL_STEPS) * 100;
+
+  // Trigger confetti when reaching step 6 (congratulations step)
+  useEffect(() => {
+    if (currentStep === 6 && !isDisqualified && !isSubmitted) {
+      // Fire confetti from both sides
+      const duration = 2000;
+      const end = Date.now() + duration;
+
+      const frame = () => {
+        confetti({
+          particleCount: 3,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0, y: 0.6 },
+          colors: ['#f472b6', '#c084fc', '#fb923c', '#facc15']
+        });
+        confetti({
+          particleCount: 3,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1, y: 0.6 },
+          colors: ['#f472b6', '#c084fc', '#fb923c', '#facc15']
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      };
+      frame();
+    }
+  }, [currentStep, isDisqualified, isSubmitted]);
 
   const canProceed = () => {
     switch (currentStep) {

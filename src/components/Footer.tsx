@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Instagram, Facebook, Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/melody-manda-logo.png";
 
 const socialLinks = [
   { icon: Instagram, href: "https://instagram.com/thecakecottage", label: "Instagram" },

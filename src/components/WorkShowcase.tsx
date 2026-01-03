@@ -2,6 +2,7 @@ import { motion, useAnimation } from "framer-motion";
 import { useRef, useMemo, useState, useEffect } from "react";
 import { useInView } from "framer-motion";
 import { Lightbox } from "./Lightbox";
+import { OptimizedImage } from "./OptimizedImage";
 
 // User uploaded cupcakes
 import colorfulCupcakes from "@/assets/colorful-cupcakes.jpg";
@@ -229,7 +230,7 @@ export function WorkShowcase() {
                 onClick={() => handleImageClick(cake)}
                 className="flex-shrink-0 w-64 md:w-80 aspect-square rounded-2xl overflow-hidden shadow-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 pointer-events-auto"
               >
-                <img
+                <OptimizedImage
                   src={cake.src}
                   alt={cake.title}
                   className="w-full h-full object-cover hover:scale-110 transition-transform duration-500 pointer-events-none"
@@ -258,7 +259,7 @@ export function WorkShowcase() {
                 onClick={() => handleImageClick(cake)}
                 className="flex-shrink-0 w-64 md:w-80 aspect-square rounded-2xl overflow-hidden shadow-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 pointer-events-auto"
               >
-                <img
+                <OptimizedImage
                   src={cake.src}
                   alt={cake.title}
                   className="w-full h-full object-cover hover:scale-110 transition-transform duration-500 pointer-events-none"

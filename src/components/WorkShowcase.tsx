@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
-import { useRef, useMemo, useState } from "react";
+import { motion, useAnimation } from "framer-motion";
+import { useRef, useMemo, useState, useEffect } from "react";
 import { useInView } from "framer-motion";
 import { Lightbox } from "./Lightbox";
 
@@ -113,9 +113,15 @@ function shuffleWithConstraint(arr: typeof allImages): typeof allImages {
 
 export function WorkShowcase() {
   const ref = useRef(null);
+  const row1Ref = useRef<HTMLDivElement>(null);
+  const row2Ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  
+  const row1Controls = useAnimation();
+  const row2Controls = useAnimation();
 
   // Shuffle images once on component mount with memoization
   const shuffledImages = useMemo(() => shuffleWithConstraint(allImages), []);
@@ -129,7 +135,58 @@ export function WorkShowcase() {
   const duplicatedRow1 = [...row1Images, ...row1Images];
   const duplicatedRow2 = [...row2Images, ...row2Images];
 
+  // Start auto-scroll animations
+  const startRow1Animation = () => {
+    row1Controls.start({
+      x: "-50%",
+      transition: {
+        repeat: Infinity,
+        repeatType: "loop",
+        duration: 60,
+        ease: "linear",
+      },
+    });
+  };
+
+  const startRow2Animation = () => {
+    row2Controls.start({
+      x: "0%",
+      transition: {
+        repeat: Infinity,
+        repeatType: "loop",
+        duration: 65,
+        ease: "linear",
+      },
+    });
+  };
+
+  useEffect(() => {
+    // Set initial positions
+    row1Controls.set({ x: "0%" });
+    row2Controls.set({ x: "-50%" });
+    
+    // Start animations
+    startRow1Animation();
+    startRow2Animation();
+  }, []);
+
+  const handleDragStart = () => {
+    setIsDragging(true);
+    row1Controls.stop();
+    row2Controls.stop();
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
+    // Resume animations after a short delay
+    setTimeout(() => {
+      startRow1Animation();
+      startRow2Animation();
+    }, 1000);
+  };
+
   const handleImageClick = (image: typeof shuffledImages[0]) => {
+    if (isDragging) return; // Prevent click during drag
     const index = shuffledImages.findIndex(img => img.src === image.src);
     setCurrentImageIndex(index);
     setLightboxOpen(true);
@@ -154,64 +211,58 @@ export function WorkShowcase() {
           </motion.div>
         </div>
 
-        {/* First row - scrolls left */}
-        <div className="relative mb-6">
+        {/* First row - scrolls left, draggable */}
+        <div className="relative mb-6 cursor-grab active:cursor-grabbing">
           <motion.div
+            ref={row1Ref}
             className="flex gap-6"
-            animate={{
-              x: ["0%", "-50%"],
-            }}
-            transition={{
-              x: {
-                repeat: Infinity,
-                repeatType: "loop",
-                duration: 60,
-                ease: "linear",
-              },
-            }}
+            animate={row1Controls}
+            drag="x"
+            dragConstraints={{ left: -10000, right: 10000 }}
+            dragElastic={0.1}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
           >
             {duplicatedRow1.map((cake, index) => (
               <button
                 key={`row1-${index}`}
                 onClick={() => handleImageClick(cake)}
-                className="flex-shrink-0 w-64 md:w-80 aspect-square rounded-2xl overflow-hidden shadow-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                className="flex-shrink-0 w-64 md:w-80 aspect-square rounded-2xl overflow-hidden shadow-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 pointer-events-auto"
               >
                 <img
                   src={cake.src}
                   alt={cake.title}
-                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-500 pointer-events-none"
+                  draggable={false}
                 />
               </button>
             ))}
           </motion.div>
         </div>
 
-        {/* Second row - scrolls right */}
-        <div className="relative">
+        {/* Second row - scrolls right, draggable */}
+        <div className="relative cursor-grab active:cursor-grabbing">
           <motion.div
+            ref={row2Ref}
             className="flex gap-6"
-            animate={{
-              x: ["-50%", "0%"],
-            }}
-            transition={{
-              x: {
-                repeat: Infinity,
-                repeatType: "loop",
-                duration: 65,
-                ease: "linear",
-              },
-            }}
+            animate={row2Controls}
+            drag="x"
+            dragConstraints={{ left: -10000, right: 10000 }}
+            dragElastic={0.1}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
           >
             {duplicatedRow2.map((cake, index) => (
               <button
                 key={`row2-${index}`}
                 onClick={() => handleImageClick(cake)}
-                className="flex-shrink-0 w-64 md:w-80 aspect-square rounded-2xl overflow-hidden shadow-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                className="flex-shrink-0 w-64 md:w-80 aspect-square rounded-2xl overflow-hidden shadow-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 pointer-events-auto"
               >
                 <img
                   src={cake.src}
                   alt={cake.title}
-                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-500 pointer-events-none"
+                  draggable={false}
                 />
               </button>
             ))}

@@ -3,6 +3,7 @@ import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { OptimizedImage } from "./OptimizedImage";
 
 import buttercreamCake from "@/assets/buttercream-cake.jpg";
 import chocolateCake from "@/assets/chocolate-cake.jpg";
@@ -79,7 +80,7 @@ export function CakesSection() {
           className="mb-12"
         >
           <div className="relative rounded-3xl overflow-hidden group cursor-pointer" onClick={scrollToOrder}>
-            <img
+            <OptimizedImage
               src={cakeCategories[0].image}
               alt={cakeCategories[0].name}
               className="w-full h-80 md:h-96 object-cover transition-transform duration-700 group-hover:scale-105"
@@ -115,7 +116,7 @@ export function CakesSection() {
               className="group cursor-pointer"
             >
               <div className="relative rounded-2xl overflow-hidden mb-4">
-                <img
+                <OptimizedImage
                   src={cake.image}
                   alt={cake.name}
                   className="w-full aspect-square object-cover transition-transform duration-500 group-hover:scale-110"

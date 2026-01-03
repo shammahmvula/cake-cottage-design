@@ -107,14 +107,31 @@ export function Lightbox({ images, currentIndex, isOpen, onClose, onNavigate }: 
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.2 }}
-            className="relative max-w-[90vw] max-h-[85vh] flex flex-col items-center"
+            className="relative max-w-[90vw] max-h-[85vh] flex flex-col items-center select-none"
             onClick={(e) => e.stopPropagation()}
+            onContextMenu={(e) => e.preventDefault()}
           >
-            <img
-              src={currentImage.src}
-              alt={currentImage.title}
-              className="max-w-full max-h-[75vh] object-contain rounded-lg shadow-2xl"
-            />
+            <div className="relative">
+              <img
+                src={currentImage.src}
+                alt={currentImage.title}
+                className="max-w-full max-h-[75vh] object-contain rounded-lg shadow-2xl"
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+                onDragStart={(e) => e.preventDefault()}
+                style={{ 
+                  WebkitUserSelect: 'none',
+                  userSelect: 'none',
+                  pointerEvents: 'none'
+                }}
+              />
+              {/* Invisible overlay to block interaction */}
+              <div 
+                className="absolute inset-0 bg-transparent z-10 rounded-lg"
+                onContextMenu={(e) => e.preventDefault()}
+                onDragStart={(e) => e.preventDefault()}
+              />
+            </div>
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}

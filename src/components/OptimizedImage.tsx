@@ -12,9 +12,9 @@ export function OptimizedImage({ src, alt, className = "", draggable = true }: O
 
   return (
     <div className="relative w-full h-full">
-      {/* Blur placeholder */}
+      {/* Static placeholder */}
       <div 
-        className={`absolute inset-0 bg-gradient-to-br from-primary/20 via-secondary/30 to-muted/20 animate-pulse transition-opacity duration-500 ${
+        className={`absolute inset-0 bg-gradient-to-br from-muted via-muted/80 to-muted/60 transition-opacity duration-500 ${
           isLoaded ? 'opacity-0' : 'opacity-100'
         }`}
       />

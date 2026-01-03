@@ -143,7 +143,7 @@ export function WorkShowcase() {
       transition: {
         repeat: Infinity,
         repeatType: "loop",
-        duration: 60,
+        duration: 35,
         ease: "linear",
       },
     });
@@ -155,7 +155,7 @@ export function WorkShowcase() {
       transition: {
         repeat: Infinity,
         repeatType: "loop",
-        duration: 65,
+        duration: 40,
         ease: "linear",
       },
     });

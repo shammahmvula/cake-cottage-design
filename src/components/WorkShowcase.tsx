@@ -159,13 +159,13 @@ export function WorkShowcase() {
           <motion.div
             className="flex gap-6"
             animate={{
-              x: [0, -50 * row1Images.length * 16],
+              x: ["0%", "-50%"],
             }}
             transition={{
               x: {
                 repeat: Infinity,
                 repeatType: "loop",
-                duration: 40,
+                duration: 60,
                 ease: "linear",
               },
             }}
@@ -191,13 +191,13 @@ export function WorkShowcase() {
           <motion.div
             className="flex gap-6"
             animate={{
-              x: [-50 * row2Images.length * 16, 0],
+              x: ["-50%", "0%"],
             }}
             transition={{
               x: {
                 repeat: Infinity,
                 repeatType: "loop",
-                duration: 45,
+                duration: 65,
                 ease: "linear",
               },
             }}

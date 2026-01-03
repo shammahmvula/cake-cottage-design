@@ -1,9 +1,24 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
+import { useState, useEffect } from "react";
 import heroCake from "@/assets/hero-cake.jpg";
 
 export function HeroSection() {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  // Preload image on mount
+  useEffect(() => {
+    const img = new Image();
+    img.src = heroCake;
+    img.onload = () => setImageLoaded(true);
+    
+    // If already cached, mark as loaded
+    if (img.complete) {
+      setImageLoaded(true);
+    }
+  }, []);
+
   const scrollToOrder = () => {
     const element = document.querySelector("#order");
     if (element) {
@@ -25,10 +40,22 @@ export function HeroSection() {
     >
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
+        {/* Blur placeholder background */}
+        <div 
+          className={`absolute inset-0 bg-gradient-to-br from-amber-900 via-amber-800 to-amber-700 transition-opacity duration-500 ${
+            imageLoaded ? 'opacity-0' : 'opacity-100'
+          }`}
+        />
         <img
           src={heroCake}
           alt="Elegant buttercream cake with purple floral decorations"
-          className="w-full h-full object-cover"
+          className={`w-full h-full object-cover transition-opacity duration-500 ${
+            imageLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
+          onLoad={() => setImageLoaded(true)}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/60 to-foreground/40" />
       </div>

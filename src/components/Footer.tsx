@@ -72,11 +72,11 @@ export function Footer() {
             </h4>
             <div className="space-y-4">
               <a
-                href="mailto:hello@thecakecottage.co.za"
+                href="mailto:melody@thecakecottage.co.za"
                 className="flex items-center gap-3 font-body text-gold-light/70 hover:text-gold transition-colors"
               >
                 <Mail className="w-5 h-5 text-primary" />
-                hello@thecakecottage.co.za
+                melody@thecakecottage.co.za
               </a>
               <a
                 href="tel:+27662522079"

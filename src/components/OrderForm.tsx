@@ -8,9 +8,9 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { QuotationSurvey } from "./QuotationSurvey";
 
 const cakeTypes = [
-  "Buttercream Cake",
+  "Vanilla Cake",
   "Chocolate Cake",
-  "Red Velvet",
+  "Red Velvet Cake",
   "Carrot Cake",
   "Cupcakes",
   "Not sure — I need guidance",

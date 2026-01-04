@@ -13,8 +13,8 @@ import cupcakes from "@/assets/cupcakes.jpg";
 
 const cakeCategories = [
   {
-    name: "Buttercream Cakes",
-    description: "Our signature artisan buttercream creations, perfect for any celebration.",
+    name: "Vanilla Cakes",
+    description: "Our signature artisan vanilla creations, perfect for any celebration.",
     image: buttercreamCake,
     featured: true,
   },
@@ -24,7 +24,7 @@ const cakeCategories = [
     image: chocolateCake,
   },
   {
-    name: "Red Velvet",
+    name: "Red Velvet Cake",
     description: "Classic red velvet with cream cheese frosting.",
     image: redVelvetCake,
   },

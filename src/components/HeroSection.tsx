@@ -97,7 +97,7 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 0.8 }}
             className="font-body text-lg text-gold-light/90 mb-10 max-w-xl"
           >
-            Handcrafted artisan buttercream cakes for your most cherished moments. 
+            Handcrafted artisan cakes for your most cherished moments. 
             Each creation is a masterpiece of flavor and elegance.
           </motion.p>
 

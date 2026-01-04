@@ -60,9 +60,9 @@ const shapeOptions = [
 ];
 
 const flavourOptions = [
-  "Vanilla",
+  "Vanilla Cake",
   "Chocolate",
-  "Red Velvet",
+  "Red Velvet Cake",
   "Carrot",
   "Lemon",
   "Marble",
